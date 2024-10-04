@@ -1,0 +1,37 @@
+CREATE TABLE usuarios (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    login VARCHAR(100) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    authorities VARCHAR(255) DEFAULT 'ROLE_USER'
+);
+
+CREATE TABLE cursos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    categoria VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE topicos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL UNIQUE,
+    mensagem TEXT NOT NULL UNIQUE,
+    data_criacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(255) NOT NULL DEFAULT 'NAO_RESPONDIDO',
+    autor_id BIGINT NOT NULL,
+    curso_id BIGINT NOT NULL,
+    CONSTRAINT fk_autor FOREIGN KEY (autor_id) REFERENCES usuarios(id),
+    CONSTRAINT fk_curso FOREIGN KEY (curso_id) REFERENCES cursos(id)
+);
+
+CREATE TABLE respostas (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    mensagem TEXT NOT NULL,
+    data_criacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    solucao BOOLEAN,
+    topico_id BIGINT NOT NULL,
+    usuario_id BIGINT NOT NULL,
+    CONSTRAINT fk_resposta_topico FOREIGN KEY (topico_id) REFERENCES topicos(id),
+    CONSTRAINT fk_resposta_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
